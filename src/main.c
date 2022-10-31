@@ -29,7 +29,7 @@
 #define TARGET_MAX 60.0
 
 
-double next_pos(double impulse, double pos) {
+double next_pos(double impulse, double pos) { //task 1.4
     double next_pos = 0.0;
     double friction_coeff;
     friction_coeff = 0.25 + drand48()*0.5; // generate random number between 0.25:0.75 
@@ -39,22 +39,63 @@ double next_pos(double impulse, double pos) {
     return next_pos;
 }
 
+void draw_court(double ball, double target) { // task 1.5
+    int placement_ball;
+    int placement_target;
+
+    placement_ball = (int)ball;
+    placement_target = (int)target;
+
+    for(int i = 0; i<120; i++)
+    {
+        if(i == placement_ball){
+            printf("o");
+        }
+        else if(i == placement_target){
+            printf("T");
+        }
+        else{
+            printf(" ");
+        }
+    }
+    printf("\n");
+    for(int i = 0; i<120; i++)
+    {
+        printf("-");
+    }
+    printf("\n");
+}
+
 int main( int argv, char *argc[] )
 {
     srand48(time(NULL));
     int exit = 0;
     double impulse = 0.0;
     char exit_char = 'n';
+    double pos;
+    double target;
+    int round;
 
     while(!exit)
     {
-        printf("*** Mini Golf ***");
-
-        while(1) // within 1m of the target
+        printf("*** Mini Golf ***\n");
+        pos = 0.0;
+        target = 40.0 + drand48()*20;
+        printf("target:\t%.2lf m\n\n",target);
+        round = 0;
+        while(pos < target - 1 || pos > target + 1) // within 1m of the target
         {
-        printf("Impulse [N*s]: ");
-        scanf("%lf",&impulse);
+            round++;
+            printf("<Round %d>\n",round);
+            draw_court(pos, target);
+            printf("Impulse [N*s]: ");
+            scanf("%lf",&impulse);
+            printf("\n");
+
+            pos = next_pos(impulse, pos);
+
         }
+        printf("Target hit, your score: %.2lf\n",target/round);
     }
 
     printf("hello world\n");
