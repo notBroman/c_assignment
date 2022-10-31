@@ -25,8 +25,38 @@
  *
  */
 
+#define TARGET_MIN 40.0
+#define TARGET_MAX 60.0
+
+
+double next_pos(double impulse, double pos) {
+    double next_pos = 0.0;
+    double friction_coeff;
+    friction_coeff = 0.25 + drand48()*0.5; // generate random number between 0.25:0.75 
+
+    next_pos = pos + impulse/friction_coeff;
+
+    return next_pos;
+}
+
 int main( int argv, char *argc[] )
 {
-    printf("Hello World\n");
+    srand48(time(NULL));
+    int exit = 0;
+    double impulse = 0.0;
+    char exit_char = 'n';
+
+    while(!exit)
+    {
+        printf("*** Mini Golf ***");
+
+        while(1) // within 1m of the target
+        {
+        printf("Impulse [N*s]: ");
+        scanf("%lf",&impulse);
+        }
+    }
+
+    printf("hello world\n");
     return 0;
 }
