@@ -32,7 +32,7 @@
 double next_pos(double impulse, double pos) { //task 1.4
     double next_pos = 0.0;
     double friction_coeff;
-    friction_coeff = 0.25 + drand48()*0.5; // generate random number between 0.25:0.75 
+    friction_coeff = 0.25 + drand48()*0.5; // generate random number between 0.25:0.75
 
     next_pos = pos + impulse/friction_coeff;
 
@@ -71,7 +71,7 @@ int main( int argv, char *argc[] )
     srand48(time(NULL));
     int exit = 0;
     double impulse = 0.0;
-    char exit_char = 'n';
+    char exit_char = 'x';
     double pos;
     double target;
     int round;
@@ -96,8 +96,16 @@ int main( int argv, char *argc[] )
 
         }
         printf("Target hit, your score: %.2lf\n",target/round);
+
+        while(exit_char != 'y' && exit_char != 'n')
+        {
+            printf("Play again y/n? ");
+            scanf("%c",&exit_char);
+        }
+        if(exit_char == 'n'){
+            break;
+        }
     }
 
-    printf("hello world\n");
     return 0;
 }
