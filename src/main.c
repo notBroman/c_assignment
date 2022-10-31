@@ -79,6 +79,7 @@ int main( int argv, char *argc[] )
     while(!exit)
     {
         printf("*** Mini Golf ***\n");
+        exit_char = 'x';
         pos = 0.0;
         target = 40.0 + drand48()*20;
         printf("target:\t%.2lf m\n\n",target);
@@ -102,6 +103,7 @@ int main( int argv, char *argc[] )
             printf("Play again y/n? ");
             scanf("%c",&exit_char);
         }
+
         if(exit_char == 'n'){
             break;
         }
