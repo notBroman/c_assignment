@@ -75,6 +75,9 @@ int main( int argv, char *argc[] )
     double pos;
     double target;
     int round;
+    FILE *fptr;
+    char buffer[256];
+    double save_score;
 
     while(!exit)
     {
@@ -84,7 +87,7 @@ int main( int argv, char *argc[] )
         target = 40.0 + drand48()*20;
         printf("target:\t%.2lf m\n\n",target);
         round = 0;
-        while(pos < target - 1 || pos > target + 1) // within 1m of the target
+        while(pos < target - 1 || pos > target + 1) // within 1m of the target (task 1.6)
         {
             round++;
             printf("<Round %d>\n",round);
@@ -96,8 +99,37 @@ int main( int argv, char *argc[] )
             pos = next_pos(impulse, pos);
 
         }
-        printf("Target hit, your score: %.2lf\n",target/round);
+        // part 2
+        printf("Target hit, your score: %.2lf\n\n",target/round); // task 2.1
 
+        printf("Best scores:\n");
+
+        // task 2.2
+        fptr = fopen("minigolf.scores", "r");
+        /*
+         * create an empty file and open it
+         */
+        if(fptr == NULL){
+            fptr = fopen("minigolf.scores", "w");
+            fprintf(fptr,EOF);
+            fclose(fptr);
+            fptr = fopen("minigolf.scores", "r");
+        }
+
+        for( int i = 0; i < 3; i++ )
+        {
+            if(fscanf(fptr, "%s", buffer) == EOF){
+                printf("no scores saved\n");
+                break;
+            }
+            else{
+                fscanf(fptr, "%lf", &save_score);
+                printf("%s %.2lf\n",buffer,save_score);
+            }
+        }
+        fclose(fptr);
+
+        //task 1.7 exiting
         while(exit_char != 'y' && exit_char != 'n')
         {
             printf("Play again y/n? ");
