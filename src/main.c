@@ -28,6 +28,10 @@
 #define TARGET_MIN 40.0
 #define TARGET_MAX 60.0
 
+typedef struct {
+    char name[20];
+    double score;
+} user;
 
 double next_pos(double impulse, double pos) { //task 1.4
     double next_pos = 0.0;
@@ -76,8 +80,9 @@ int main( int argv, char *argc[] )
     double target;
     int round;
     FILE *fptr;
-    char buffer[256];
-    double save_score;
+    user top_scores[3];
+    char username[20];
+    user tmp_score;
 
     while(!exit)
     {
@@ -111,23 +116,63 @@ int main( int argv, char *argc[] )
          */
         if(fptr == NULL){
             fptr = fopen("minigolf.scores", "w");
-            fprintf(fptr,EOF);
             fclose(fptr);
             fptr = fopen("minigolf.scores", "r");
         }
 
         for( int i = 0; i < 3; i++ )
         {
-            if(fscanf(fptr, "%s", buffer) == EOF){
-                printf("no scores saved\n");
-                break;
+            if(fscanf(fptr, "%19s", &top_scores[i].name[0]) == EOF){
+                printf("################\n");
+                top_scores[i].score = 0;
             }
             else{
-                fscanf(fptr, "%lf", &save_score);
-                printf("%s %.2lf\n",buffer,save_score);
+                fscanf(fptr, "%lf", &top_scores[i].score);
+                printf("%s %.2lf\n",top_scores[i].name,top_scores[i].score);
             }
         }
+        printf("\n");
         fclose(fptr);
+
+        /*
+         * Open file if the player is in the top 3
+         * Insert it in the right spot
+         */
+        if(target/round > top_scores[2].score){
+            scanf("%19s",&username[0]);
+            fopen("minigolf.scores","w");
+            for( int i = 2; i > 0; i-- ){
+                /*
+                 * start from smallest score
+                 * if the score is between the current score and the next highest score replace current score
+                 * otherwise copy the next bigger score into the current spot
+                 * move to next bigger score as current score
+                 * repeat until the score is between current and next bigger score
+                 */
+                if(target/round > top_scores[i].score && target/round < top_scores[i-1].score){
+                    top_scores[i].score = target/round;
+                    strcpy(top_scores[i].name, &username[0]);
+                    break;
+                }
+                else{
+
+                    top_scores[i].score = top_scores[i-1].score;
+                    strcpy(top_scores[i].name, top_scores[i-1].name);
+                }
+
+                if(i == 1){
+
+                    top_scores[0].score = target/round;
+                    strcpy(top_scores[0].name, &username[0]);
+                }
+            }
+            for( int i = 0; i < 3;i++){
+                fprintf(fptr,"%s %.2lf\n",top_scores[i].name,top_scores[i].score);
+            }
+            fclose(fptr);
+        }
+
+
 
         //task 1.7 exiting
         while(exit_char != 'y' && exit_char != 'n')
